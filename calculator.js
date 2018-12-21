@@ -85,21 +85,23 @@ var Calculator = /** @class */ (function () {
             }
         }
     };
+    Calculator.prototype.rmZero = function (string) {
+        return string.replace(/.0+$/g, "").replace(/\.0+e/, "e");
+    };
     Calculator.prototype.updateNumOrOperator = function (text) {
-        if ("0123456789".indexOf(text) >= 0) {
+        if ("0123456789.".indexOf(text) >= 0) {
             this.updateNum(text);
         }
         else if ("+-×÷".indexOf(text) >= 0) {
             // 更新operator
-            if (this.result) {
-                console.log(1111111);
-                this.n1 = this.result;
-                this.result = "";
+            if (this.n1 && this.n2) {
+                this.n1 = this.rmZero(this.updateResult(this.n1, this.n2, this.operator));
+                this.n2 = "";
             }
             this.operator = text;
         }
         else if ("=".indexOf(text) >= 0) {
-            this.result = this.updateResult(this.n1, this.n2, this.operator);
+            this.result = this.rmZero(this.updateResult(this.n1, this.n2, this.operator));
             this.span.textContent = this.result;
             this.n1 = "";
             this.n2 = "";
